@@ -1,0 +1,28 @@
+package com.bitirmeodev.halisahambe.library.exception;
+
+import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Locale;
+
+
+@RestControllerAdvice
+@RequiredArgsConstructor
+@Slf4j
+public class RestExceptionHandler {
+    private final MessageSource messageSource;
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<MetaResponse> handlerBaseException(BaseException baseException, Locale locale){
+        MessageCodes messageCode = baseException.getMessageCode();
+        String message = messageSource.getMessage(messageCode.getMessage(), baseException.getArgs(),locale);
+        return ResponseEntity.internalServerError().body(MetaResponse.of(messageCode.getCode(),message));
+    }
+
+
+}

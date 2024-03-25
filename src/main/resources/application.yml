@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: halisaham-be
+  messages:
+    basename: lang/messages
+  datasource:
+    username: postgres
+    password: burak2424
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/halisaham
+  jpa:
+    database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+server:
+  port: 8090
+
+sha256:
+  security:
+    salt: salt
+
+jwt:
+  secret:
+    key: dusantadic
