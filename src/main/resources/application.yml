@@ -17,10 +17,7 @@ spring:
 server:
   port: 8090
 
-sha256:
-  security:
-    salt: salt
 
 jwt:
   secret:
-    key: dusantadic
+    key: TADICONFIRELALALALALALALLALALAALEXDESOUZAEMREBELOZGLU

@@ -1,4 +1,4 @@
-package com.bitirmeodev.halisahambe.domain;
+package com.bitirmeodev.halisahambe.domain.example;
 
 import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
 import com.bitirmeodev.halisahambe.library.exception.BaseException;

@@ -1,4 +1,4 @@
-package com.bitirmeodev.halisahambe.domain;
+package com.bitirmeodev.halisahambe.domain.example;
 
 
 public class ExampleResponse{
