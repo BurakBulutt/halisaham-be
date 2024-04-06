@@ -25,6 +25,7 @@ public class UserMapper {
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
         user.setEmail(user.getEmail() == null ? dto.getEmail() : user.getEmail());
+        user.setPassword(dto.getPassword());
         user.setUserType(dto.getUserType());
         user.setIsVerified(dto.getIsVerified());
         user.setChangePasswordCode(dto.getChangePasswordCode());

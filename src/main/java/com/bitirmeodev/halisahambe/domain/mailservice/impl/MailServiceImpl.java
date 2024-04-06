@@ -50,7 +50,7 @@ public class MailServiceImpl {
             MimeMessageHelper helper = new MimeMessageHelper(message, false);
             helper.setFrom(MAIL);
             helper.setTo(to);
-            helper.setSubject("Hesap Onay ");
+            helper.setSubject("Hesap Onay");
             helper.setText("Hesabı onaylamak için aşağıdaki bağlantıya tıklayınız \n" + code);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
@@ -65,8 +65,8 @@ public class MailServiceImpl {
         try {
             MimeMessageHelper helper = new MimeMessageHelper(message, false);
             helper.setTo(to);
-            helper.setSubject("Şifre Değişikliği ");
-            helper.setText("Şifrenizi sıfırlamak için gerekli kodunuz: \n " + code);
+            helper.setSubject("Şifre Değişikliği");
+            helper.setText("Şifrenizi sıfırlamak için gerekli kodunuz: \n" + code);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

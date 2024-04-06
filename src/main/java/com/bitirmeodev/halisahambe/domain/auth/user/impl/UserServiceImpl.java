@@ -8,6 +8,7 @@ import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
 import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
     private final MailServiceImpl mailService;
     private final JwtUtil jwtUtil;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public List<UserDto> getAll() {
@@ -42,12 +44,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto save(UserDto dto) {
-        return UserMapper.toDto(repository.save(UserMapper.toEntity(new User(),dto)));
+        UserDto user = UserMapper.toDto(repository.save(UserMapper.toEntity(new User(),dto)));
+        eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
+        return user;
     }
 
     @Transactional
     public User saveUser(UserDto dto){
-        return repository.save(UserMapper.toEntity(new User(),dto));
+        User user = repository.save(UserMapper.toEntity(new User(),dto));
+        eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
+        return user;
     }
 
     @Override

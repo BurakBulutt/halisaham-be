@@ -8,6 +8,7 @@ import com.bitirmeodev.halisahambe.library.rest.DataResponse;
 import com.bitirmeodev.halisahambe.library.rest.Response;
 import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("users")
 @RequiredArgsConstructor
 public class UserController extends BaseController {
+    private static final String VERIFY = "HESAP ONAYLANDI";
     private final UserService service;
 
     @GetMapping
@@ -35,12 +37,6 @@ public class UserController extends BaseController {
         return response(UserMapper.toResponse(service.getByEmail(email)));
     }
 
-    @PostMapping("send-verification")
-    public Response<Void> sendVerificationCode(){
-        service.sendVerificationMail();
-        return new Response<>(MetaResponse.success());
-    }
-
     @PostMapping
     @PreAuthorize("hasAnyRole('user','admin')")
     public Response<UserResponse> save(@RequestBody UserRequest request){
@@ -59,10 +55,16 @@ public class UserController extends BaseController {
         service.delete(id);
         return new Response<>(MetaResponse.success());
     }
+
     @GetMapping("verificate")
-    @PreAuthorize("hasAnyRole('user','admin')")
-    public Response<String> verificateUser(@RequestParam(name = "code") String code){
+    public ResponseEntity<String> verificateUser(@RequestParam(name = "code") String code){
         service.verificateUser(code);
-        return new Response<>("HESAP ONAYLANDI");
+        return ResponseEntity.ok(VERIFY);
+    }
+
+    @PostMapping("send-verification")
+    public Response<Void> sendVerificationCode(){
+        service.sendVerificationMail();
+        return new Response<>(MetaResponse.success());
     }
 }
