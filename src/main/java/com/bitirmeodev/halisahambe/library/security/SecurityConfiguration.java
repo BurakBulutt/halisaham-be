@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfiguration {
     private static final String AUTH = "/auth/**";
+
     private final JwtFilter jwtFilter;
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -32,7 +33,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(x -> x.requestMatchers(AUTH).permitAll())
-                .authorizeHttpRequests(x -> x.anyRequest().authenticated())
+                .authorizeHttpRequests(x -> x.anyRequest().permitAll())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement(x -> x.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
@@ -51,7 +52,7 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
+        return new Sha256Encoder();
     }
 
     @Bean

@@ -14,10 +14,22 @@ spring:
     hibernate:
       ddl-auto: update
 
+
 server:
   port: 8090
 
+mail:
+  host: smtp.mailgun.org
+  port: 587
+  username: postmaster@sandboxdacb9b73690e4c059a8815be09ef33fc.mailgun.org
+  password: fe9efec8ad8390486f2da7c6a465cadb-4c205c86-fb0ea0af
 
 jwt:
   secret:
     key: TADICONFIRELALALALALALALLALALAALEXDESOUZAEMREBELOZGLU
+    recoverKey : TA769TKQVEFWVP3PPNYF1PB2
+
+encoder :
+  salt : SALT
+
+

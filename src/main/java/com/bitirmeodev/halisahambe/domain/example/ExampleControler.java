@@ -5,6 +5,7 @@ import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.rest.BaseController;
 import com.bitirmeodev.halisahambe.library.rest.DataResponse;
 import com.bitirmeodev.halisahambe.library.rest.Response;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +20,7 @@ import java.util.List;
 public class ExampleControler extends BaseController {
 
     @GetMapping("{id}")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<ExampleResponse> sayHi(@PathVariable String id) {
         if (id.equals("2")){
             throw new BaseException(MessageCodes.BAD_REQUEST);
@@ -28,7 +30,14 @@ public class ExampleControler extends BaseController {
         return response(exampleResponse);
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('user','admin')")
+    public Response<String> sayHi(){
+        return response("Merhaba");
+    }
+
     @GetMapping("all")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<DataResponse<ExampleResponse>> sayHiAll() {
 
         ExampleResponse exampleResponse2 = ExampleResponse.getInstance("ss");

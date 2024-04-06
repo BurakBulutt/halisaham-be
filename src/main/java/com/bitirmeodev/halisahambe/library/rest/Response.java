@@ -17,4 +17,7 @@ public class Response<T> {
         this.meta = MetaResponse.success();
     }
 
+    public Response(MetaResponse meta){
+        this.meta = meta;
+    }
 }

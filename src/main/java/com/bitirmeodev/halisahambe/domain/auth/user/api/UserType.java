@@ -9,6 +9,7 @@ public enum UserType {
 
     USER("user");
 
+
     private String role;
 
     UserType(String role) {

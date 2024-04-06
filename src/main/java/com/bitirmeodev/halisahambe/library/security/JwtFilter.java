@@ -1,10 +1,15 @@
 package com.bitirmeodev.halisahambe.library.security;
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserService;
+import com.bitirmeodev.halisahambe.domain.auth.user.impl.User;
+import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
+import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +26,7 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
     private static final String JWT_BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
+    private static final String VERIFICATION = "/users/send-verification";
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
@@ -55,6 +61,19 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
         }
+
+        if (request.getMethod().equals("POST") && request.getRequestURI().equals(VERIFICATION)){
+            filterChain.doFilter(request,response);
+            return;
+        }
+
+        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(username);
+        User user = customUserDetails.getUser();
+
+        if (user != null && !user.getIsVerified()){
+            throw new BaseException(MessageCodes.UNAUTHORIZED);
+        }
+
         filterChain.doFilter(request,response);
 
     }

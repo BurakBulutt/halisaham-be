@@ -19,13 +19,9 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository repository;
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public CustomUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = repository.findByEmail(username).orElseThrow(() -> new BaseException(MessageCodes.ENTITY_NOT_FOUND, User.class,username));
-        return org.springframework.security.core.userdetails.User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .authorities(Collections.singleton(new SimpleGrantedAuthority(getRole(user.getUserType().getRole()))))
-                .build();
+        return new CustomUserDetails(user);
     }
 
     private String getRole(String role) {

@@ -29,12 +29,6 @@ public class User extends AbstractEntity {
     @Column(nullable = false)
     private String password;
 
-    private String phoneNumber;
-
-    @Temporal(TemporalType.DATE)
-    @Column
-    private Date birthdate;
-
     @Column(nullable = false)
     private Boolean isVerified;
 
