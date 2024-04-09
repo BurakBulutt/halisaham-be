@@ -15,7 +15,9 @@ public enum MessageCodes {
 
     UNAUTHORIZED(401,"general.unauthorized"),
 
-    ENTITY_NOT_FOUND(404,"general.entityNotFound");
+    ENTITY_NOT_FOUND(404,"general.entityNotFound"),
+
+    AUTHENTICATION_FAIL(1051,"general.fail");
 
 
     private String message;

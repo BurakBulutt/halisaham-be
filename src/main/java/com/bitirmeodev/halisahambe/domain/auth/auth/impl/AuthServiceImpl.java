@@ -7,6 +7,8 @@ import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserType;
 import com.bitirmeodev.halisahambe.domain.auth.user.impl.User;
 import com.bitirmeodev.halisahambe.domain.auth.user.impl.UserServiceImpl;
+import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
+import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.security.CustomUserDetails;
 import com.bitirmeodev.halisahambe.library.security.JwtUtil;
 import com.bitirmeodev.halisahambe.library.security.UserDetailsServiceImpl;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.naming.AuthenticationException;
 import java.util.UUID;
 
 
@@ -26,8 +29,8 @@ public class AuthServiceImpl {
     private final UserServiceImpl userService;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailsService;
+
 
     @Transactional
     public TokenDto register(RegisterRequest request) {
@@ -44,11 +47,11 @@ public class AuthServiceImpl {
 
     public TokenDto login(LoginRequest request){
 
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                request.email(),
-                request.password()
-                )
-        );
+        UserDto user = userService.getByEmail(request.email());
+
+        if (!user.getPassword().equals(passwordEncoder.encode(request.password()))){
+            throw new BaseException(MessageCodes.AUTHENTICATION_FAIL);
+        }
 
         CustomUserDetails userDetails = userDetailsService.loadUserByUsername(request.email());
 

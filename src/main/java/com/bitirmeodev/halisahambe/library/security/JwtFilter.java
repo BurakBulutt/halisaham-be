@@ -26,7 +26,6 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
     private static final String JWT_BEARER = "Bearer ";
     private static final String AUTHORIZATION = "Authorization";
-    private static final String VERIFICATION = "/users/send-verification";
 
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
@@ -49,9 +48,15 @@ public class JwtFilter extends OncePerRequestFilter {
         username = jwtUtil.extractUsername(token);
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             if (jwtUtil.validateToken(token,userDetails)){
+
+                if (!userDetails.getUser().getIsVerified()){
+                    filterChain.doFilter(request,response);
+                    return;
+                }
+
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 
@@ -60,18 +65,6 @@ public class JwtFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
-        }
-
-        if (request.getMethod().equals("POST") && request.getRequestURI().equals(VERIFICATION)){
-            filterChain.doFilter(request,response);
-            return;
-        }
-
-        CustomUserDetails customUserDetails = userDetailsService.loadUserByUsername(username);
-        User user = customUserDetails.getUser();
-
-        if (user != null && !user.getIsVerified()){
-            throw new BaseException(MessageCodes.UNAUTHORIZED);
         }
 
         filterChain.doFilter(request,response);
