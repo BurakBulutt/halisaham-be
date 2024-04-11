@@ -3,6 +3,8 @@ package com.bitirmeodev.halisahambe.domain.auth.user.impl;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserCreationEvent;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserService;
+import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileDto;
+import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileService;
 import com.bitirmeodev.halisahambe.domain.mailservice.impl.MailServiceImpl;
 import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
 import com.bitirmeodev.halisahambe.library.exception.BaseException;
@@ -23,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private final MailServiceImpl mailService;
     private final JwtUtil jwtUtil;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserProfileService userProfileService;
 
     @Override
     public List<UserDto> getAll() {
@@ -45,6 +48,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto save(UserDto dto) {
         UserDto user = UserMapper.toDto(repository.save(UserMapper.toEntity(new User(),dto)));
+        userProfileService.save(UserProfileDto.builder()
+                .userId(user.getId())
+                .photo(null)
+                .build());
         eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
         return user;
     }
