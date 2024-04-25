@@ -1,13 +1,17 @@
 package com.bitirmeodev.halisahambe.domain.event.impl;
 
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.event.api.EventDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
 
-    public static EventDto toDto(Event event){
+    public static EventDto toDto(Event event,List<UserDto> users) {
+
         return EventDto.builder()
                 .id(event.getId())
                 .city(event.getCity())
@@ -19,6 +23,7 @@ public class EventMapper {
                 .photo(event.getPhoto())
                 .userId(event.getUserId())
                 .expirationDate(event.getExpirationDate())
+                .users(users)
                 .build();
     }
 

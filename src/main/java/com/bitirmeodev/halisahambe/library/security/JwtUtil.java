@@ -39,7 +39,7 @@ public class JwtUtil {
         return claimsResolver.apply(claims);
     }
 
-    public String extractUserId() {
+    public static String extractUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null) {

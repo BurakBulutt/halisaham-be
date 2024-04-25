@@ -23,8 +23,5 @@ public class Chat extends AbstractEntity {
     private String eventId;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> users;
-
-    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> messages;
 }

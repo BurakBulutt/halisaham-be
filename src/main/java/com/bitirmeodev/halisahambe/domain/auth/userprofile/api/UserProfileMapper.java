@@ -1,5 +1,6 @@
 package com.bitirmeodev.halisahambe.domain.auth.userprofile.api;
 
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.web.UserProfileRequest;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.web.UserProfileResponse;
 import lombok.AccessLevel;
@@ -12,7 +13,9 @@ public class UserProfileMapper {
 
     public static UserProfileDto toDto(UserProfileRequest request){
         return UserProfileDto.builder()
-                .userId(request.getUserId())
+                .user(UserDto.builder()
+                        .id(request.getUserId())
+                        .build())
                 .photo(request.getPhoto())
                 .build();
     }
@@ -20,7 +23,7 @@ public class UserProfileMapper {
     public static UserProfileResponse toResponse(UserProfileDto dto){
         return UserProfileResponse.builder()
                 .id(dto.getId())
-                .userId(dto.getUserId())
+                .user(dto.getUser())
                 .photo(dto.getPhoto())
                 .build();
     }

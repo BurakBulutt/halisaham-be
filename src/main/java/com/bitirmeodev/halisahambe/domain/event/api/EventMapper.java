@@ -36,6 +36,7 @@ public class EventMapper {
                 .expirationDate(dto.getExpirationDate())
                 .photo(dto.getPhoto())
                 .maxPeople(dto.getMaxPeople())
+                .users(dto.getUsers())
                 .build();
     }
 

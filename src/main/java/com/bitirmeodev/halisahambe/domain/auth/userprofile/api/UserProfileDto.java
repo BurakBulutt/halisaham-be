@@ -1,5 +1,6 @@
 package com.bitirmeodev.halisahambe.domain.auth.userprofile.api;
 
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import lombok.*;
 
 @Getter
@@ -9,6 +10,6 @@ import lombok.*;
 @Builder
 public class UserProfileDto {
     private String id;
-    private String userId;
+    private UserDto user;
     private byte[] photo;
 }

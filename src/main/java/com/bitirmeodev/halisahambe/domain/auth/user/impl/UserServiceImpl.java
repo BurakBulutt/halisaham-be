@@ -3,6 +3,7 @@ package com.bitirmeodev.halisahambe.domain.auth.user.impl;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserCreationEvent;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserService;
+import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileCreationEvent;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileDto;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileService;
 import com.bitirmeodev.halisahambe.domain.mailservice.impl.MailServiceImpl;
@@ -25,7 +26,6 @@ public class UserServiceImpl implements UserService {
     private final MailServiceImpl mailService;
     private final JwtUtil jwtUtil;
     private final ApplicationEventPublisher eventPublisher;
-    private final UserProfileService userProfileService;
 
     @Override
     public List<UserDto> getAll() {
@@ -48,11 +48,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDto save(UserDto dto) {
         UserDto user = UserMapper.toDto(repository.save(UserMapper.toEntity(new User(),dto)));
-        userProfileService.save(UserProfileDto.builder()
-                .userId(user.getId())
-                .photo(null)
-                .build());
-        eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
+    //    eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
         return user;
     }
 
@@ -80,6 +76,7 @@ public class UserServiceImpl implements UserService {
     public void verificateUser(String code){
         User user = repository.findByVerificationCode(code).orElseThrow(()-> new BaseException(MessageCodes.ENTITY_NOT_FOUND,User.class.getSimpleName()));
         user.setIsVerified(Boolean.TRUE);
+        eventPublisher.publishEvent(new UserProfileCreationEvent(user.getId()));
         repository.save(user);
     }
 
@@ -105,6 +102,10 @@ public class UserServiceImpl implements UserService {
 
         mailService.sendConfirmationMail(userCreationEvent.email(), verificationTarget);
 
+    }
+
+    public List<UserDto> getAllByUserIdIn(List<String> userIds) {
+        return repository.findAllById(userIds).stream().map(UserMapper::toDto).toList();
     }
 
 

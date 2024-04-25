@@ -1,8 +1,10 @@
 package com.bitirmeodev.halisahambe.domain.event.web;
 
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,4 +22,5 @@ public class EventResponse {
     private String description;
     private byte[] photo;
     private String userId;
+    private List<UserDto> users;
 }

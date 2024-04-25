@@ -3,16 +3,19 @@ package com.bitirmeodev.halisahambe.domain.auth.auth.impl;
 import com.bitirmeodev.halisahambe.domain.auth.auth.api.TokenDto;
 import com.bitirmeodev.halisahambe.domain.auth.auth.web.LoginRequest;
 import com.bitirmeodev.halisahambe.domain.auth.auth.web.RegisterRequest;
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserCreationEvent;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserType;
 import com.bitirmeodev.halisahambe.domain.auth.user.impl.User;
 import com.bitirmeodev.halisahambe.domain.auth.user.impl.UserServiceImpl;
+import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileCreationEvent;
 import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
 import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.security.CustomUserDetails;
 import com.bitirmeodev.halisahambe.library.security.JwtUtil;
 import com.bitirmeodev.halisahambe.library.security.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +33,7 @@ public class AuthServiceImpl {
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
     private final UserDetailsServiceImpl userDetailsService;
+    private final ApplicationEventPublisher publisher;
 
 
     @Transactional
@@ -37,6 +41,8 @@ public class AuthServiceImpl {
         UserDto user = setRegisterUser(request);
 
         User saved = userService.saveUser(user);
+
+        publisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
 
         CustomUserDetails userDetails = new CustomUserDetails(saved);
 
