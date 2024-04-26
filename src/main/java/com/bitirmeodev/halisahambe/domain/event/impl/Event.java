@@ -16,9 +16,10 @@ import java.util.List;
 public class Event extends AbstractEntity {
     public static final String TABLE = "event";
     private static final String COL_EXPIRATION_DATE = "expiration_date";
-    private static final String COL_CITY = "city";
-    private static final String COL_DISTRICT = "disrict";
-    private static final String COL_STREET = "street";
+    private static final String COL_CITY = "city_id";
+    private static final String COL_DISTRICT = "disrict_id";
+    private static final String COL_STREET = "street_id";
+    private static final String COL_AREA_ID = "area_id";
     private static final String COL_MAX_PEOPLE = "max_people";
     private static final String COL_TITLE = "title";
     private static final String COL_DESCRIPTION = "description";
@@ -29,13 +30,16 @@ public class Event extends AbstractEntity {
     private Date expirationDate;
 
     @Column(name = COL_CITY)
-    private String city;
+    private String cityId;
 
     @Column(name = COL_DISTRICT)
-    private String district;
+    private String districtId;
 
     @Column(name = COL_STREET)
-    private String street;
+    private String streetId;
+
+    @Column(name = COL_AREA_ID)
+    private String areaId;
 
     @Column(name = COL_MAX_PEOPLE)
     private Integer maxPeople;
@@ -45,10 +49,6 @@ public class Event extends AbstractEntity {
 
     @Column(name = COL_DESCRIPTION)
     private String description;
-
-    @Column(name = COL_PHOTO)
-    @Lob
-    private byte[] photo;
 
     @Column(name = COL_USER_ID,nullable = false,updatable = false)
     private String userId;

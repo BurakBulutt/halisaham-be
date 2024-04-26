@@ -3,6 +3,7 @@ package com.bitirmeodev.halisahambe.domain.auth.user.impl;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserCreationEvent;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserService;
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserType;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileCreationEvent;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileDto;
 import com.bitirmeodev.halisahambe.domain.auth.userprofile.api.UserProfileService;
@@ -49,6 +50,7 @@ public class UserServiceImpl implements UserService {
     public UserDto save(UserDto dto) {
         UserDto user = UserMapper.toDto(repository.save(UserMapper.toEntity(new User(),dto)));
     //    eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
+        eventPublisher.publishEvent(new UserProfileCreationEvent(user.getId()));
         return user;
     }
 
@@ -57,6 +59,10 @@ public class UserServiceImpl implements UserService {
         User user = repository.save(UserMapper.toEntity(new User(),dto));
         eventPublisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
         return user;
+    }
+
+    public User getByRole(UserType userType){
+        return repository.findByUserType(userType).orElse(null);
     }
 
     @Override

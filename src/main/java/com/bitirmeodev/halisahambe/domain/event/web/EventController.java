@@ -47,6 +47,7 @@ public class EventController extends BaseController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<EventResponse> save(@RequestBody EventRequest request){
         return response(EventMapper.toResponse(service.save(EventMapper.toDto(request))));
     }

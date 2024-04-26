@@ -1,5 +1,6 @@
 package com.bitirmeodev.halisahambe.domain.event.impl;
 
+import com.bitirmeodev.halisahambe.domain.area.api.AreaService;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.impl.UserServiceImpl;
 import com.bitirmeodev.halisahambe.domain.event.api.EventDto;
@@ -22,6 +23,7 @@ public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final EventUserRepository eventUserRepository;
     private final UserServiceImpl userService;
+    private final AreaService areaService;
 
     @Override
     public List<EventDto> getAll() {
@@ -30,7 +32,7 @@ public class EventServiceImpl implements EventService {
                     List<EventUser> eventUserList = eventUserRepository.findAllByEventId(event.getId());
                     List<String> userIds = eventUserList.stream().map(EventUser::getUserId).toList();
                     List<UserDto> users = userService.getAllByUserIdIn(userIds);
-                    return EventMapper.toDto(event,users);
+                    return EventMapper.toDto(event,users,areaService);
                 })
                 .toList();
     }
@@ -40,7 +42,7 @@ public class EventServiceImpl implements EventService {
         List<EventUser> eventUserList = eventUserRepository.findAllByEventId(id);
         List<String> userIds = eventUserList.stream().map(EventUser::getUserId).toList();
         List<UserDto> users = userService.getAllByUserIdIn(userIds);
-        return repository.findById(id).map(event -> EventMapper.toDto(event,users)).orElseThrow(() -> new BaseException(MessageCodes.ENTITY_NOT_FOUND,Event.class.getSimpleName(),id));
+        return repository.findById(id).map(event -> EventMapper.toDto(event,users,areaService)).orElseThrow(() -> new BaseException(MessageCodes.ENTITY_NOT_FOUND,Event.class.getSimpleName(),id));
     }
 
     @Override
@@ -48,7 +50,7 @@ public class EventServiceImpl implements EventService {
         String userId = JwtUtil.extractUserId();
         List<EventUser> eventUserList = eventUserRepository.findAllByUserId(userId);
         List<Event> events = repository.findAllById(eventUserList.stream().map(EventUser::getEventId).toList());
-        return events.stream().map(event -> EventMapper.toDto(event,null)).toList();
+        return events.stream().map(event -> EventMapper.toDto(event,null,areaService)).toList();
     }
 
 
@@ -59,7 +61,7 @@ public class EventServiceImpl implements EventService {
         List<EventUser> eventUserList = new ArrayList<>();
         eventUserList.add(new EventUser(dto.getUserId(),event.getId()));
         eventUserRepository.saveAll(eventUserList);
-        return EventMapper.toDto(event,List.of(userService.getById(dto.getUserId())));
+        return EventMapper.toDto(event,List.of(userService.getById(dto.getUserId())),areaService);
     }
 
     @Override
@@ -69,7 +71,7 @@ public class EventServiceImpl implements EventService {
         List<EventUser> eventUserList = eventUserRepository.findAllByEventId(id);
         List<UserDto> userDtos = userService.getAllByUserIdIn(eventUserList.stream().map(EventUser::getUserId).toList());
 
-        return EventMapper.toDto(repository.save(EventMapper.toEntity(event,dto)),userDtos);
+        return EventMapper.toDto(repository.save(EventMapper.toEntity(event,dto)),userDtos,areaService);
     }
 
     @Override

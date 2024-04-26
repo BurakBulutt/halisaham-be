@@ -11,12 +11,11 @@ import java.util.Date;
 @Builder
 public class EventRequest {
     private Date expirationDate;
-    private String city;
-    private String district;
-    private String street;
+    private String cityId;
+    private String districtId;
+    private String streetId;
+    private String areaId;
     private Integer maxPeople;
     private String title;
     private String description;
-    private byte[] photo;
-    private String userId;
 }

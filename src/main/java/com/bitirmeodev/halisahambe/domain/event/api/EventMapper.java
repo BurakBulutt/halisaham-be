@@ -1,7 +1,9 @@
 package com.bitirmeodev.halisahambe.domain.event.api;
 
+import com.bitirmeodev.halisahambe.domain.area.api.AreaDto;
 import com.bitirmeodev.halisahambe.domain.event.web.EventRequest;
 import com.bitirmeodev.halisahambe.domain.event.web.EventResponse;
+import com.bitirmeodev.halisahambe.library.security.JwtUtil;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -12,14 +14,14 @@ public class EventMapper {
 
     public static EventDto toDto(EventRequest request){
         return EventDto.builder()
-                .userId(request.getUserId())
+                .userId(JwtUtil.extractUserId())
                 .title(request.getTitle())
                 .description(request.getDescription())
-                .city(request.getCity())
-                .district(request.getDistrict())
-                .street(request.getStreet())
+                .cityId(request.getCityId())
+                .districtId(request.getDistrictId())
+                .streetId(request.getStreetId())
+                .area(AreaDto.builder().id(request.getAreaId()).build())
                 .maxPeople(request.getMaxPeople())
-                .photo(request.getPhoto())
                 .expirationDate(request.getExpirationDate())
                 .build();
     }
@@ -29,14 +31,14 @@ public class EventMapper {
                 .id(dto.getId())
                 .title(dto.getTitle())
                 .description(dto.getDescription())
-                .city(dto.getCity())
-                .district(dto.getDistrict())
-                .street(dto.getStreet())
+                .cityId(dto.getCityId())
+                .districtId(dto.getDistrictId())
+                .streetId(dto.getStreetId())
                 .userId(dto.getUserId())
                 .expirationDate(dto.getExpirationDate())
-                .photo(dto.getPhoto())
                 .maxPeople(dto.getMaxPeople())
                 .users(dto.getUsers())
+                .area(dto.getArea())
                 .build();
     }
 
