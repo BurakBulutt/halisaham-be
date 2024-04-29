@@ -3,6 +3,7 @@ package com.bitirmeodev.halisahambe.domain.district.api;
 import com.bitirmeodev.halisahambe.domain.street.api.StreetDto;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Getter
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @ToString
-public class DistrictDto {
+public class DistrictDto implements Serializable {
     private String id;
     private String name;
     private String cityId;

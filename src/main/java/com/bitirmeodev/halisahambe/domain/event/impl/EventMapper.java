@@ -37,6 +37,7 @@ public class EventMapper {
         event.setTitle(dto.getTitle());
         event.setUserId(dto.getUserId());
         event.setExpirationDate(dto.getExpirationDate());
+        event.setAreaId(dto.getArea().getId());
 
         return event;
     }

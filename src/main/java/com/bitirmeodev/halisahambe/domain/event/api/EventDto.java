@@ -4,6 +4,7 @@ import com.bitirmeodev.halisahambe.domain.area.api.AreaDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class EventDto {
+public class EventDto implements Serializable {
     private String id;
     private Date expirationDate;
     private String cityId;

@@ -12,6 +12,8 @@ import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.security.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@CacheConfig(cacheNames = "events")
 public class EventServiceImpl implements EventService {
     private final EventRepository repository;
     private final EventUserRepository eventUserRepository;
@@ -46,6 +49,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    @Cacheable
     public List<EventDto> getUserEvents() {
         String userId = JwtUtil.extractUserId();
         List<EventUser> eventUserList = eventUserRepository.findAllByUserId(userId);

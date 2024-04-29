@@ -35,6 +35,7 @@ public class EventController extends BaseController {
     }
 
     @PutMapping("delete-user-event/{eventId}")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<Void> deleteUserOnEvent(@PathVariable String eventId, @RequestParam String userId) {
         service.deleteUserOnEvent(eventId,userId);
         return new Response<>(MetaResponse.success());
@@ -58,6 +59,7 @@ public class EventController extends BaseController {
     }
 
     @DeleteMapping("{id}")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<Void> delete(@PathVariable String id){
         service.delete(id);
         return new Response<>(MetaResponse.success());
