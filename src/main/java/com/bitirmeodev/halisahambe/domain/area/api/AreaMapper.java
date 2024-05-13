@@ -11,13 +11,12 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AreaMapper {
 
-    public static AreaDto toDto(AreaRequest request, MultipartFile multipartFile){
+    public static AreaDto toDto(AreaRequest request){
         return AreaDto.builder()
                 .name(request.name())
-                .cityId(request.cityId())
                 .districtId(request.districtId())
                 .streetId(request.streetId())
-                .multipartFile(multipartFile)
+                .photoUrl(request.photoUrl())
                 .build();
     }
 
@@ -25,7 +24,6 @@ public class AreaMapper {
         return AreaResponse.builder()
                 .id(dto.getId())
                 .name(dto.getName())
-                .cityId(dto.getCityId())
                 .districtId(dto.getDistrictId())
                 .streetId(dto.getStreetId())
                 .photo(dto.getPhoto())

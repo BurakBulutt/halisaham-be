@@ -11,7 +11,6 @@ public class AreaMapper {
         return AreaDto.builder()
                 .id(area.getId())
                 .name(area.getName())
-                .cityId(area.getCityId())
                 .districtId(area.getDistrictId())
                 .streetId(area.getStreetId())
                 .photo(area.getPhoto())
@@ -20,7 +19,6 @@ public class AreaMapper {
 
     public static Area toEntity(Area area,AreaDto dto){
         area.setName(dto.getName());
-        area.setCityId(dto.getCityId());
         area.setDistrictId(dto.getDistrictId());
         area.setStreetId(dto.getStreetId());
         area.setPhoto(dto.getPhoto());

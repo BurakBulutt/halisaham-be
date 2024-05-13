@@ -29,22 +29,25 @@ public class AreaController extends BaseController {
     @GetMapping("{id}")
     @PreAuthorize("hasAnyRole('admin')")
     public Response<AreaResponse> getById(@PathVariable String id){
-      //  return response(AreaMapper.toResponse(service.getById(id)));
-        return null;
+        return response(AreaMapper.toResponse(service.getById(id)));
+    }
+
+    @GetMapping("find-district-and-street")
+    @PreAuthorize("hasAnyRole('admin','user')")
+    public Response<DataResponse<AreaResponse>> getById(@RequestParam String districtId, @RequestParam String streetId){
+        return response(AreaMapper.toDataResponse(service.getByDistrictIdAndStreetId(districtId,streetId)));
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('admin')")
-    public Response<AreaResponse> save(@RequestParam("request") String areaRequest,@RequestParam("image") MultipartFile multipartFile) throws IOException {
-        AreaRequest request = new ObjectMapper().readValue(areaRequest, AreaRequest.class);
-        return response(AreaMapper.toResponse(service.save(AreaMapper.toDto(request,multipartFile))));
+    public Response<AreaResponse> save(@RequestBody AreaRequest request) throws IOException {
+        return response(AreaMapper.toResponse(service.save(AreaMapper.toDto(request))));
     }
 
     @PutMapping("{id}")
     @PreAuthorize("hasAnyRole('admin')")
-    public Response<AreaResponse> update(@PathVariable String id,@RequestParam("request") String areaRequest,@RequestParam("image") MultipartFile multipartFile) throws IOException{
-        AreaRequest request = new ObjectMapper().readValue(areaRequest, AreaRequest.class);
-        return response(AreaMapper.toResponse(service.update(id,AreaMapper.toDto(request,multipartFile))));
+    public Response<AreaResponse> update(@PathVariable String id,@RequestBody AreaRequest request) throws IOException{
+        return response(AreaMapper.toResponse(service.update(id,AreaMapper.toDto(request))));
     }
 
     @DeleteMapping("{id}")

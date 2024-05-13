@@ -38,7 +38,7 @@ public class EventMapper {
                 .expirationDate(dto.getExpirationDate())
                 .maxPeople(dto.getMaxPeople())
                 .users(dto.getUsers())
-                .area(dto.getArea())
+   //             .area(dto.getArea())
                 .build();
     }
 

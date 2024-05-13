@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class CityController extends BaseController {
     private final CityService service;
 
-    @GetMapping
+    @GetMapping("get-all")
     @PreAuthorize("hasAnyRole('admin','user')")
     public Response<DataResponse<CityResponse>> getAll(){
         return response(CityMapper.toDataResponse(service.getAll()));

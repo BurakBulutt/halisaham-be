@@ -26,8 +26,6 @@ public class Area extends AbstractEntity {
     @Column(name = COL_NAME)
     private String name;
 
-    private String cityId;
-
     @Column(name = COL_DISTRICT)
     private String districtId;
 

@@ -27,6 +27,16 @@ public class EventController extends BaseController {
         return response(EventMapper.toDataResponse(service.getUserEvents()));
     }
 
+    @GetMapping("find-all-param")
+    public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreetAndArea(@RequestParam String cityId, @RequestParam String districtId, @RequestParam String streetId, String areaId) {
+        return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreetAndArea(cityId, districtId, streetId, areaId)));
+    }
+
+    @GetMapping("find-without-area")
+    public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreet(@RequestParam String cityId, @RequestParam String districtId, @RequestParam String streetId) {
+        return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreet(cityId, districtId, streetId)));
+    }
+
     @PostMapping("join-event")
     @PreAuthorize("hasAnyRole('user','admin')")
     public Response<Void> joinEvent(@RequestParam String eventId) {
@@ -37,30 +47,32 @@ public class EventController extends BaseController {
     @PutMapping("delete-user-event/{eventId}")
     @PreAuthorize("hasAnyRole('user','admin')")
     public Response<Void> deleteUserOnEvent(@PathVariable String eventId, @RequestParam String userId) {
-        service.deleteUserOnEvent(eventId,userId);
+        service.deleteUserOnEvent(eventId, userId);
         return new Response<>(MetaResponse.success());
     }
 
     @DeleteMapping("exit-evet/{eventId}")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<Void> exitEvent(@PathVariable String eventId) {
         service.exitOnEvent(eventId);
         return new Response<>(MetaResponse.success());
     }
 
-    @PostMapping
+    @PostMapping("save")
     @PreAuthorize("hasAnyRole('user','admin')")
-    public Response<EventResponse> save(@RequestBody EventRequest request){
+    public Response<EventResponse> save(@RequestBody EventRequest request) {
         return response(EventMapper.toResponse(service.save(EventMapper.toDto(request))));
     }
 
     @PutMapping("{id}")
-    public Response<EventResponse> update(@PathVariable String id,@RequestBody EventRequest request){
-        return response(EventMapper.toResponse(service.update(id,EventMapper.toDto(request))));
+    @PreAuthorize("hasAnyRole('user','admin')")
+    public Response<EventResponse> update(@PathVariable String id, @RequestBody EventRequest request) {
+        return response(EventMapper.toResponse(service.update(id, EventMapper.toDto(request))));
     }
 
     @DeleteMapping("{id}")
     @PreAuthorize("hasAnyRole('user','admin')")
-    public Response<Void> delete(@PathVariable String id){
+    public Response<Void> delete(@PathVariable String id) {
         service.delete(id);
         return new Response<>(MetaResponse.success());
     }

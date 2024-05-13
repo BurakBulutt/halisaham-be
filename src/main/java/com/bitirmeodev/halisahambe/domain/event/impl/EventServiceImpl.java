@@ -13,6 +13,7 @@ import com.bitirmeodev.halisahambe.library.security.JwtUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,7 @@ public class EventServiceImpl implements EventService {
     private final AreaService areaService;
 
     @Override
+    @Cacheable
     public List<EventDto> getAll() {
         return repository.findAll().stream()
                 .map(event -> {
@@ -49,7 +51,31 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    @Cacheable
+    public List<EventDto> getByCityAndDistrictAndStreetAndArea(String cityId, String districtId, String streetId, String areaId) {
+        return repository.findAllByCityIdAndDistrictIdAndStreetIdAndAreaId(cityId,districtId,streetId,areaId).stream()
+                .map(event -> {
+                    List<EventUser> eventUserList = eventUserRepository.findAllByEventId(event.getId());
+                    List<String> userIds = eventUserList.stream().map(EventUser::getUserId).toList();
+                    List<UserDto> users = userService.getAllByUserIdIn(userIds);
+                    return EventMapper.toDto(event,users,areaService);
+                })
+                .toList();
+    }
+
+    @Override
+    public List<EventDto> getByCityAndDistrictAndStreet(String cityId, String districtId, String streetId) {
+        return repository.findAllByCityIdAndDistrictIdAndStreetId(cityId,districtId,streetId).stream()
+                .map(event -> {
+                    List<EventUser> eventUserList = eventUserRepository.findAllByEventId(event.getId());
+                    List<String> userIds = eventUserList.stream().map(EventUser::getUserId).toList();
+                    List<UserDto> users = userService.getAllByUserIdIn(userIds);
+                    return EventMapper.toDto(event,users,areaService);
+                })
+                .toList();
+    }
+
+    @Override
+    //@Cacheable
     public List<EventDto> getUserEvents() {
         String userId = JwtUtil.extractUserId();
         List<EventUser> eventUserList = eventUserRepository.findAllByUserId(userId);
@@ -57,9 +83,9 @@ public class EventServiceImpl implements EventService {
         return events.stream().map(event -> EventMapper.toDto(event,null,areaService)).toList();
     }
 
-
     @Override
     @Transactional
+    @CachePut(value = "events")
     public EventDto save(EventDto dto) {
         Event event = repository.save(EventMapper.toEntity(new Event(),dto));
         List<EventUser> eventUserList = new ArrayList<>();

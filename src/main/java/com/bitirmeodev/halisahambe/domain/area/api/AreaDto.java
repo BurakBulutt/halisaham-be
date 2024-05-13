@@ -15,7 +15,6 @@ public class AreaDto implements Serializable {
     private String name;
     private String districtId;
     private String streetId;
-    private String cityId;
+    private String photoUrl;
     private byte[] photo;
-    private MultipartFile multipartFile;
 }

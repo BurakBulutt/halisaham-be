@@ -12,6 +12,5 @@ public class AreaResponse {
     private String name;
     private String districtId;
     private String streetId;
-    private String cityId;
     private byte[] photo;
 }
