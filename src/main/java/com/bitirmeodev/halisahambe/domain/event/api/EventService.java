@@ -1,5 +1,6 @@
 package com.bitirmeodev.halisahambe.domain.event.api;
 
+import com.bitirmeodev.halisahambe.domain.event.web.EventSearchRequest;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
@@ -10,8 +11,8 @@ public interface EventService {
 
     List<EventDto> getUserEvents();
 
-    List<EventDto> getByCityAndDistrictAndStreetAndArea(String cityId, String districtId, String streetId, String areaId);
-    List<EventDto> getByCityAndDistrictAndStreet(String cityId, String districtId, String streetId);
+    List<EventDto> getByCityAndDistrictAndStreetAndArea(EventSearchRequest request);
+    List<EventDto> getByCityAndDistrictAndStreet(EventSearchRequest request);
 
     EventDto save(EventDto dto);
     EventDto update(String id,EventDto dto);

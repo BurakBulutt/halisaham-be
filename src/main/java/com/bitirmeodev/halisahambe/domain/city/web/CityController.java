@@ -17,7 +17,7 @@ public class CityController extends BaseController {
     private final CityService service;
 
     @GetMapping("get-all")
-    @PreAuthorize("hasAnyRole('admin','user')")
+//    @PreAuthorize("hasAnyRole('admin','user')")
     public Response<DataResponse<CityResponse>> getAll(){
         return response(CityMapper.toDataResponse(service.getAll()));
     }

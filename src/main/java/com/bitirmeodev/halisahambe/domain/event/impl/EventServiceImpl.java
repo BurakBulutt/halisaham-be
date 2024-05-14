@@ -7,6 +7,7 @@ import com.bitirmeodev.halisahambe.domain.event.api.EventDto;
 import com.bitirmeodev.halisahambe.domain.event.api.EventService;
 import com.bitirmeodev.halisahambe.domain.event.impl.eventuser.EventUser;
 import com.bitirmeodev.halisahambe.domain.event.impl.eventuser.EventUserRepository;
+import com.bitirmeodev.halisahambe.domain.event.web.EventSearchRequest;
 import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
 import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.security.JwtUtil;
@@ -51,8 +52,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> getByCityAndDistrictAndStreetAndArea(String cityId, String districtId, String streetId, String areaId) {
-        return repository.findAllByCityIdAndDistrictIdAndStreetIdAndAreaId(cityId,districtId,streetId,areaId).stream()
+    public List<EventDto> getByCityAndDistrictAndStreetAndArea(EventSearchRequest request) {
+        return repository.findAllByCityIdAndDistrictIdAndStreetIdAndAreaId(request.cityId(),request.districtId(),request.streetId(),request.areaId()).stream()
                 .map(event -> {
                     List<EventUser> eventUserList = eventUserRepository.findAllByEventId(event.getId());
                     List<String> userIds = eventUserList.stream().map(EventUser::getUserId).toList();
@@ -63,8 +64,8 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<EventDto> getByCityAndDistrictAndStreet(String cityId, String districtId, String streetId) {
-        return repository.findAllByCityIdAndDistrictIdAndStreetId(cityId,districtId,streetId).stream()
+    public List<EventDto> getByCityAndDistrictAndStreet(EventSearchRequest request) {
+        return repository.findAllByCityIdAndDistrictIdAndStreetId(request.cityId(),request.districtId(),request.streetId()).stream()
                 .map(event -> {
                     List<EventUser> eventUserList = eventUserRepository.findAllByEventId(event.getId());
                     List<String> userIds = eventUserList.stream().map(EventUser::getUserId).toList();

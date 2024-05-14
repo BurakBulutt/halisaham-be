@@ -33,8 +33,8 @@ public class AreaController extends BaseController {
     }
 
     @GetMapping("find-district-and-street")
-    @PreAuthorize("hasAnyRole('admin','user')")
-    public Response<DataResponse<AreaResponse>> getById(@RequestParam String districtId, @RequestParam String streetId){
+//    @PreAuthorize("hasAnyRole('admin','user')")
+    public Response<DataResponse<AreaResponse>> getByDistrictAndStreet(@RequestParam String districtId, @RequestParam String streetId){
         return response(AreaMapper.toDataResponse(service.getByDistrictIdAndStreetId(districtId,streetId)));
     }
 
