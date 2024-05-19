@@ -28,13 +28,13 @@ public class EventController extends BaseController {
     }
 
     @GetMapping("find-all-param")
-    public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreetAndArea(@RequestBody EventSearchRequest request) {
-        return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreetAndArea(request)));
+    public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreetAndArea(@RequestParam String cityId,@RequestParam String districtId,@RequestParam String streetId,@RequestParam String areaId) {
+        return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreetAndArea(cityId,districtId,streetId,areaId)));
     }
 
     @GetMapping("find-without-area")
-    public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreet(@RequestBody EventSearchRequest request) {
-        return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreet(request)));
+    public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreet(@RequestParam String cityId,@RequestParam String districtId,@RequestParam String streetId) {
+        return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreet(cityId,districtId,streetId)));
     }
 
     @PostMapping("join-event")

@@ -11,8 +11,8 @@ public interface EventService {
 
     List<EventDto> getUserEvents();
 
-    List<EventDto> getByCityAndDistrictAndStreetAndArea(EventSearchRequest request);
-    List<EventDto> getByCityAndDistrictAndStreet(EventSearchRequest request);
+    List<EventDto> getByCityAndDistrictAndStreetAndArea(String cityId,String districtId,String streetId,String areaId);
+    List<EventDto> getByCityAndDistrictAndStreet(String cityId,String districtId,String streetId);
 
     EventDto save(EventDto dto);
     EventDto update(String id,EventDto dto);
