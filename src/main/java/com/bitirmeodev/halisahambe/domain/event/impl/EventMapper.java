@@ -2,6 +2,7 @@ package com.bitirmeodev.halisahambe.domain.event.impl;
 
 import com.bitirmeodev.halisahambe.domain.area.api.AreaService;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
+import com.bitirmeodev.halisahambe.domain.auth.user.api.UserService;
 import com.bitirmeodev.halisahambe.domain.event.api.EventDto;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class EventMapper {
 
-    public static EventDto toDto(Event event, List<UserDto> users, AreaService areaService) {
+    public static EventDto toDto(Event event, List<UserDto> users, AreaService areaService, UserService userService) {
 
         return EventDto.builder()
                 .id(event.getId())
@@ -21,7 +22,7 @@ public class EventMapper {
                 .maxPeople(event.getMaxPeople())
                 .title(event.getTitle())
                 .description(event.getDescription())
-                .userId(event.getUserId())
+                .adminUser(userService.getById(event.getUserId()))
                 .area(areaService.getById(event.getAreaId()))
                 .expirationDate(event.getExpirationDate())
                 .users(users)
@@ -35,7 +36,7 @@ public class EventMapper {
         event.setStreetId(dto.getStreetId());
         event.setMaxPeople(dto.getMaxPeople());
         event.setTitle(dto.getTitle());
-        event.setUserId(dto.getUserId());
+        event.setUserId(dto.getAdminUser().getId());
         event.setExpirationDate(dto.getExpirationDate());
         event.setAreaId(dto.getArea().getId());
 

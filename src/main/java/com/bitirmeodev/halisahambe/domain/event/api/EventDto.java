@@ -22,7 +22,7 @@ public class EventDto implements Serializable {
     private Integer maxPeople;
     private String title;
     private String description;
-    private String userId;
+    private UserDto adminUser;
     private List<UserDto> users;
     private AreaDto area;
 }

@@ -44,6 +44,10 @@ public class AuthServiceImpl {
 
         publisher.publishEvent(new UserCreationEvent(user.getEmail(),user.getVerificationCode()));
 
+        if (user.getIsVerified().equals(Boolean.FALSE)){
+            throw new BaseException(MessageCodes.NEED_VERIFICATION);
+        }
+
         CustomUserDetails userDetails = new CustomUserDetails(saved);
 
         String token = jwtUtil.generateToken(userDetails);
@@ -57,6 +61,10 @@ public class AuthServiceImpl {
 
         if (!user.getPassword().equals(passwordEncoder.encode(request.password()))){
             throw new BaseException(MessageCodes.AUTHENTICATION_FAIL);
+        }
+
+        if (user.getIsVerified().equals(Boolean.FALSE)){
+            throw new BaseException(MessageCodes.NEED_VERIFICATION);
         }
 
         CustomUserDetails userDetails = userDetailsService.loadUserByUsername(request.email());

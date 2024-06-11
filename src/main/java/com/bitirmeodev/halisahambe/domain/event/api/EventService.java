@@ -17,14 +17,13 @@ public interface EventService {
     EventDto save(EventDto dto);
     EventDto update(String id,EventDto dto);
 
-    @Transactional
     void deleteUserOnEvent(String eventId, String userId);
 
-    @Transactional
     void exitOnEvent(String eventId);
 
-    @Transactional
-    void joinEvent(String eventId);
+    EventDto joinEvent(String eventId);
 
     void delete(String id);
+
+    Boolean checkEventAuthority(String id);
 }

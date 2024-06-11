@@ -10,7 +10,7 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class EventRequest {
-    private Date expirationDate;
+    private Long expirationDate;
     private String cityId;
     private String districtId;
     private String streetId;

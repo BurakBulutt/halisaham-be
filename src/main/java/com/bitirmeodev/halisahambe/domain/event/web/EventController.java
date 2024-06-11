@@ -28,20 +28,21 @@ public class EventController extends BaseController {
     }
 
     @GetMapping("find-all-param")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreetAndArea(@RequestParam String cityId,@RequestParam String districtId,@RequestParam String streetId,@RequestParam String areaId) {
         return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreetAndArea(cityId,districtId,streetId,areaId)));
     }
 
     @GetMapping("find-without-area")
+    @PreAuthorize("hasAnyRole('user','admin')")
     public Response<DataResponse<EventResponse>> getByCityAndDistrictAndStreet(@RequestParam String cityId,@RequestParam String districtId,@RequestParam String streetId) {
         return response(EventMapper.toDataResponse(service.getByCityAndDistrictAndStreet(cityId,districtId,streetId)));
     }
 
     @PostMapping("join-event")
     @PreAuthorize("hasAnyRole('user','admin')")
-    public Response<Void> joinEvent(@RequestParam String eventId) {
-        service.joinEvent(eventId);
-        return new Response<>(MetaResponse.success());
+    public Response<EventResponse> joinEvent(@RequestParam String eventId) {
+        return response(EventMapper.toResponse(service.joinEvent(eventId)));
     }
 
     @PutMapping("delete-user-event/{eventId}")
@@ -51,7 +52,7 @@ public class EventController extends BaseController {
         return new Response<>(MetaResponse.success());
     }
 
-    @DeleteMapping("exit-evet/{eventId}")
+    @DeleteMapping("exit-event/{eventId}")
     @PreAuthorize("hasAnyRole('user','admin')")
     public Response<Void> exitEvent(@PathVariable String eventId) {
         service.exitOnEvent(eventId);
@@ -75,5 +76,11 @@ public class EventController extends BaseController {
     public Response<Void> delete(@PathVariable String id) {
         service.delete(id);
         return new Response<>(MetaResponse.success());
+    }
+
+    @GetMapping("check-event-authority/{id}")
+    @PreAuthorize("hasAnyRole('user','admin')")
+    public Response<Boolean> checkAdmin(@PathVariable String id){
+        return response(service.checkEventAuthority(id));
     }
 }

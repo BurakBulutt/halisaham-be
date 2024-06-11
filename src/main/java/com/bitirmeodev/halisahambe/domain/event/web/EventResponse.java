@@ -14,14 +14,14 @@ import java.util.List;
 @Builder
 public class EventResponse {
     private String id;
-    private Date expirationDate;
+    private Long expirationDate;
     private String cityId;
     private String districtId;
     private String streetId;
     private Integer maxPeople;
     private String title;
     private String description;
-    private String userId;
+    private UserDto admin;
     private List<UserDto> users;
     private AreaDto area;
 }

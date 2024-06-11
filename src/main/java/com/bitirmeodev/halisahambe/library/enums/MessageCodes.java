@@ -17,7 +17,11 @@ public enum MessageCodes {
 
     ENTITY_NOT_FOUND(404,"general.entityNotFound"),
 
-    AUTHENTICATION_FAIL(1051,"general.fail");
+    ENTITY_ALREADY_EXISTS(1053,"general.entityAlreadyExists"),
+
+    AUTHENTICATION_FAIL(1051,"general.fail"),
+
+    NEED_VERIFICATION(1052,"general.needVerify");
 
 
     private String message;

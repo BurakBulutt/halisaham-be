@@ -52,11 +52,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(token,userDetails)){
 
-                if (!userDetails.getUser().getIsVerified()){
-                    filterChain.doFilter(request,response);
-                    return;
-                }
-
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
 

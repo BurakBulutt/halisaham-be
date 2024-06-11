@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +21,6 @@ public class DefaultAreaCreator {
 
     @EventListener(value = ApplicationReadyEvent.class)
     @Order(2)
-    @SneakyThrows
     public void createAreas() {
         List<AreaDto> areas = new ArrayList<>();
 
@@ -28,21 +28,24 @@ public class DefaultAreaCreator {
                 .name("KAFKALE HALI SAHA")
                 .streetId("1")
                 .districtId("1")
-                .photo(new FileInputStream(new File("C:\\Users\\lothe\\OneDrive\\Masaüstü\\projectImages\\saha-1.jpg")).readAllBytes())
+                .photo(null)
                 .build());
         areas.add(AreaDto.builder()
-                        .name("SIÇKALE HALI SAHA")
-                        .streetId("1")
-                        .districtId("1")
-                        .photo(new FileInputStream(new File("C:\\Users\\lothe\\OneDrive\\Masaüstü\\projectImages\\saha-2.jpg")).readAllBytes())
+                .name("KAFKALE HALI SAHA 2")
+                .streetId("1")
+                .districtId("1")
+                .photo(null)
                 .build());
 
         saveAreas(areas);
     }
 
-    public void saveAreas(List<AreaDto> areas){
+    public void saveAreas(List<AreaDto> areas) {
         areas.forEach(areaDto -> {
-            if (repository.findAllByDistrictIdAndStreetId(areaDto.getDistrictId(), areaDto.getStreetId()) == null){
+            Optional<Area> area = repository.findAllByName(areaDto.getName())
+                    .stream()
+                    .findFirst();
+            if (area.isEmpty()){
                 repository.save(AreaMapper.toEntity(new Area(),areaDto));
             }
         });
