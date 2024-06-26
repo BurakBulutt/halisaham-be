@@ -3,6 +3,9 @@ package com.bitirmeodev.halisahambe.domain.event.impl;
 import com.bitirmeodev.halisahambe.domain.area.api.AreaService;
 import com.bitirmeodev.halisahambe.domain.auth.user.api.UserDto;
 import com.bitirmeodev.halisahambe.domain.auth.user.impl.UserServiceImpl;
+import com.bitirmeodev.halisahambe.domain.chat.api.ChatDto;
+import com.bitirmeodev.halisahambe.domain.chat.api.ChatService;
+import com.bitirmeodev.halisahambe.domain.event.api.EventCreationEvent;
 import com.bitirmeodev.halisahambe.domain.event.api.EventDto;
 import com.bitirmeodev.halisahambe.domain.event.api.EventService;
 import com.bitirmeodev.halisahambe.domain.event.impl.eventuser.EventUser;
@@ -10,12 +13,15 @@ import com.bitirmeodev.halisahambe.domain.event.impl.eventuser.EventUserReposito
 import com.bitirmeodev.halisahambe.library.enums.MessageCodes;
 import com.bitirmeodev.halisahambe.library.exception.BaseException;
 import com.bitirmeodev.halisahambe.library.security.JwtUtil;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +34,8 @@ public class EventServiceImpl implements EventService {
     private final EventUserRepository eventUserRepository;
     private final UserServiceImpl userService;
     private final AreaService areaService;
+    private final ApplicationEventPublisher publisher;
+    private final ChatService chatService;
 
     @Override
     @Cacheable
@@ -109,6 +117,7 @@ public class EventServiceImpl implements EventService {
         List<EventUser> eventUserList = new ArrayList<>();
         eventUserList.add(new EventUser(dto.getAdminUser().getId(), event.getId()));
         eventUserRepository.saveAll(eventUserList);
+        publisher.publishEvent(new EventCreationEvent(event.getId()));
         return EventMapper.toDto(event, List.of(userService.getById(dto.getAdminUser().getId())), areaService, userService);
     }
 
@@ -162,6 +171,14 @@ public class EventServiceImpl implements EventService {
         String userId = JwtUtil.extractUserId();
         Event event = repository.findById(eventId).orElseThrow(() -> new BaseException(MessageCodes.ENTITY_NOT_FOUND, Event.class.getSimpleName(), eventId));
         List<EventUser> eventUserList = eventUserRepository.findAllByEventId(event.getId());
+        eventUserList.stream()
+                .filter(eventUser -> eventUser.getUserId().equals(event.getUserId()))
+                .findFirst()
+                .ifPresent(eventUserList::remove);
+
+        if (event.getMaxPeople().equals(eventUserList.size())){
+            throw new BaseException(MessageCodes.FAIL);
+        }
 
         if (eventUserRepository.findByUserIdAndEventId(userId, eventId).isPresent()) {
             throw new BaseException(MessageCodes.ENTITY_ALREADY_EXISTS);
@@ -190,5 +207,14 @@ public class EventServiceImpl implements EventService {
             return true;
         }
         return false;
+    }
+
+    @EventListener
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void eventCreationEvent(EventCreationEvent event) {
+        chatService.save(ChatDto.builder()
+                .eventId(event.eventId())
+                .messages(new ArrayList<>())
+                .build());
     }
 }

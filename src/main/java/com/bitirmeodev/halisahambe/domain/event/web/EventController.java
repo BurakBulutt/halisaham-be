@@ -65,7 +65,7 @@ public class EventController extends BaseController {
         return response(EventMapper.toResponse(service.save(EventMapper.toDto(request))));
     }
 
-    @PutMapping("{id}")
+    @PutMapping("update/{id}")
     @PreAuthorize("hasAnyRole('user','admin')")
     public Response<EventResponse> update(@PathVariable String id, @RequestBody EventRequest request) {
         return response(EventMapper.toResponse(service.update(id, EventMapper.toDto(request))));

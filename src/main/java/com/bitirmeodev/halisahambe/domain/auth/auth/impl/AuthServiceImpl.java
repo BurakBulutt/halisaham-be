@@ -36,7 +36,6 @@ public class AuthServiceImpl {
     private final ApplicationEventPublisher publisher;
 
 
-    @Transactional
     public TokenDto register(RegisterRequest request) {
         UserDto user = setRegisterUser(request);
 
