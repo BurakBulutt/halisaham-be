@@ -18,7 +18,7 @@ import lombok.Setter;
 public class Street extends AbstractEntity {
     public static final String TABLE = "street";
     private static final String COL_NAME = "name";
-    private static final String COL_DISTRICT_ID = "city_id";
+    private static final String COL_DISTRICT_ID = "district_id";
 
     @Column(nullable = false,name = COL_NAME)
     private String name;
